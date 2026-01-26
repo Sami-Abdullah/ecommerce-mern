@@ -19,4 +19,4 @@
 13. creating seed route for testing 
 14. responseHandler Controller for error or success
 15. GET/api/users/:id ->get a single user by id
-16. creating services in backendj
+16. creating services in backend
