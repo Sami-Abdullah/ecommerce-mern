@@ -1,8 +1,10 @@
 const createError = require('http-errors')
+const fs = require('fs').promises
 const User = require('../models/userModel');
 const { sucessResponse } = require('./responseController');
-const  mongoose  = require('mongoose');
-const { findUserById } = require('../services/findUser');
+
+const { findWithId } = require('../services/findItem');
+const deleteImg = require('../helper/deleteImg');
 
 
 
@@ -51,12 +53,12 @@ const getUsers = async (req, res, next) => {
   }
 }
 
-const getUser = async (req, res, next) => {
+const getUserById = async (req, res, next) => {
   try {
 
     const id = req.params.id;
-    
-    const user = await findUserById(id);
+    const options = { password: 0 }
+    const user = await findWithId(User,id, options);
     return sucessResponse(res, {
       statusCode: 200,
       message: 'user were returned sucessfully',
@@ -70,4 +72,62 @@ const getUser = async (req, res, next) => {
     next(error)
   }
 }
-module.exports = {getUsers ,getUser}
+
+
+const deleteUserById = async (req, res, next) => {
+  try {
+
+    const id = req.params.id;
+    const options = { password: 0 }
+    const user = await findWithId(User,id, options);
+
+    const userImagePath = user.image;
+    deleteImg(userImagePath)
+    await User.findByIdAndDelete({
+      _id: id, 
+      isAdmin : false
+    })
+
+
+    return sucessResponse(res, {
+      statusCode: 200,
+      message: 'user were deleted sucessfully',
+
+
+    })
+  } catch (error) {
+
+    next(error)
+  }
+}
+const processRegister = async (req, res, next) => {
+  try {
+
+    const {name,email,password,phone,address}= req.body
+
+    const userExists = await User.exists({email:email})
+    if(userExists){
+      throw createError(409,'email already exist,please sign in')
+    }
+
+    const newUser={
+      name,
+      email,
+      password,
+      phone,
+      address
+
+    }
+
+    return sucessResponse(res, {
+      statusCode: 200,
+      message: 'user were deleted sucessfully',
+
+
+    })
+  } catch (error) {
+
+    next(error)
+  }
+}
+module.exports = { getUsers, getUserById, deleteUserById ,processRegister}

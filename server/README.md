@@ -20,3 +20,7 @@
 14. responseHandler Controller for error or success
 15. GET/api/users/:id ->get a single user by id
 16. creating services in backend
+              1.find item by id
+              2.delete user 
+              3.delete img helper
+              4.create a user 
