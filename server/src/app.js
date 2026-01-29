@@ -13,7 +13,7 @@ const app = express();
 const rateLimiter = rateLimit({
   windowMs:1*60*1000,
   max:5,
-  message:'Too mamny request form this ip, please try again later',
+  message:'Too many request form this ip, please try again later',
 })
 // Middleware
 
@@ -24,7 +24,7 @@ app.use(bodyParser.json());// for adding data to the request body
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-// routers
+// routes
 
 app.use("/api/users",userRouter)
 app.use("/api/seed",seedRouter)
